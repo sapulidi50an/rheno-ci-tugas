@@ -46,3 +46,4 @@ $routes->get('contact', 'Home :: contact', ['filter' => 'auth' ]);
 
 $routes->post('produk_category/create', 'ProductCategoryController::create');
 $routes->get('product/download', 'ProductController::download');
+$routes->get('checkout', 'TransaksiController::checkout', ['filter' => 'auth']);

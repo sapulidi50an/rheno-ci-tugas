@@ -60,4 +60,10 @@ class TransaksiController extends BaseController
         session()->setflashdata('success', 'Keranjang Berhasil Dihapus');
         return redirect()->to(base_url('keranjang'));
     }
+
+    public function checkout(){
+    $data['items'] = $this->cart->contents();
+    $data['total'] = $this->cart->total();
+
+    return view('v_checkout', $data);}
 }
