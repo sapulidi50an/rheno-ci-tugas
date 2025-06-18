@@ -41,7 +41,7 @@ class ProductCategoryController extends BaseController
         $fotoFile = $this->request->getFile('foto');
         if ($fotoFile && $fotoFile->isValid() && !$fotoFile->hasMoved()) {
             $fileName = $fotoFile->getRandomName();
-            $fotoFile->move('img', $fileName);
+            $fotoFile->move('img', $fileName); // upload
         }
 
         $this->categoryModel->insert([
@@ -86,7 +86,7 @@ class ProductCategoryController extends BaseController
                 // Delete old photo if exists
                 $oldData = $this->categoryModel->find($id);
                 if ($oldData && isset($oldData['foto']) && !empty($oldData['foto'])) {
-                    $oldFilePath = WRITEPATH . '../public/img/' . $oldData['foto'];
+                    $oldFilePath = FCPATH . 'img/' . $oldData['foto']; // hapus
                     if (file_exists($oldFilePath)) {
                         unlink($oldFilePath);
                     }
@@ -114,7 +114,7 @@ class ProductCategoryController extends BaseController
         $category = $this->categoryModel->find($id);
         if ($category) {
             if (isset($category['foto']) && !empty($category['foto'])) {
-                $filePath = WRITEPATH . '../public/img/' . $category['foto'];
+                $filePath = FCPATH . 'img/' . $category['foto'];
                 if (file_exists($filePath)) {
                     unlink($filePath);
                 }

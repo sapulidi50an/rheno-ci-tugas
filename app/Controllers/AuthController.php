@@ -53,6 +53,7 @@ class AuthController extends BaseController
                 return redirect()->back();
             }
         }
+        
     
         return view('v_login');
     }

@@ -43,11 +43,11 @@ if (session()->getFlashData('failed')) {
                 <td><?php echo $item['deskripsi'] ?? 'N/A' ?></td>
                 
                 <td>
-                    <?php if (isset($item['foto']) && $item['foto'] != '' && file_exists("img/" . $item['foto'])) : ?>
-                        <img src="<?php echo base_url() . "img/" . $item['foto'] ?>" width="100px" alt="Foto Kategori">
+                    <?php if (!empty($item['foto'])) : ?>
+                        <img src="<?= base_url('img/' . $item['foto']) ?>" width="100px" alt="Foto Kategori">
                     <?php else: ?>
                         <span class="text-muted">Tidak ada foto</span>
-                    <?php endif; ?>
+                    <?php endif; ?>       
                 </td>
                 <td>
                     <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#editCategoryModal-<?= $item['id'] ?>">Ubah</button>
@@ -76,8 +76,8 @@ if (session()->getFlashData('failed')) {
                                     <label for="deskripsi">Deskripsi</label>
                                     <input type="text" name="deskripsi" class="form-control" id="deskripsi" value="<?= $item['deskripsi'] ?? '' ?>" placeholder="Deskripsi" required>
                                 </div>
-                                <?php if (isset($item['foto']) && $item['foto'] != '' && file_exists("img/" . $item['foto'])) : ?>
-                                    <img src="<?php echo base_url() . "img/" . $item['foto'] ?>" width="100px" alt="Current Photo">
+                                <?php if (!empty($item['foto'])) : ?>
+                                    <img src="<?= base_url('img/' . $item['foto']) ?>" width="100px" alt="Current Photo">
                                 <?php endif; ?>
                                 <div class="form-check">
                                     <input class="form-check-input" type="checkbox" id="check-<?= $item['id'] ?>" name="check" value="1">

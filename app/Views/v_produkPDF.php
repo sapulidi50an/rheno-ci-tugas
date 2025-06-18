@@ -12,11 +12,15 @@
     <?php
     $no = 1;
     foreach ($product as $index => $produk) :
-        $path = "../public/img/" . $produk['foto'];
-        $type = pathinfo($path, PATHINFO_EXTENSION);
-        $data = file_get_contents($path);
-        $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
-
+        $base64 = '';
+        if (!empty($produk['foto'])) {
+            $path = FCPATH . "img/" . $produk['foto'];
+            if (file_exists($path)) {
+                $type = pathinfo($path, PATHINFO_EXTENSION);
+                $data = file_get_contents($path);
+                $base64 = 'data:image/' . $type . ';base64,' . base64_encode($data);
+            }
+        }
     ?>
         <tr>
             <td align="center"><?= $index + 1 ?></td>
@@ -24,7 +28,11 @@
             <td align="right"><?= "Rp " . number_format($produk['harga'], 2, ",", ".") ?></td>
             <td align="center"><?= $produk['jumlah'] ?></td>
             <td align="center">
-                <img src="<?= $base64 ?>" width="50px">
+                <?php if ($base64): ?>
+                    <img src="<?= $base64 ?>" width="50px">
+                <?php else: ?>
+                    Tidak ada gambar
+                <?php endif; ?>
             </td>
         </tr>
     <?php endforeach; ?>
