@@ -63,4 +63,4 @@ $routes->get('profile', 'Home::profile', ['filter' => 'auth']);
 $routes->get('checkout', 'TransaksiController::checkout', ['filter' => 'auth']);
 $routes->get('produk/download', 'ProductController::download');
 
-$routes->resource('api', ['controller' => 'apiController']);
+$routes->resource('api', ['controller' => 'ApiController']);

@@ -93,7 +93,7 @@ class ProductCategoryController extends BaseController
                 }
                 $fileName = $fotoFile->getRandomName();
                 $fotoFile->move('img', $fileName);
-                $dataToUpdate['foto'] = $fileName;
+                $dataToUpdate['foto'] = $fileName;  
             }
         }
 

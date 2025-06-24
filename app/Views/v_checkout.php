@@ -114,7 +114,7 @@ $(document).ready(function() {
 
     function hitungTotal() {
         total = ongkir + subtotal;
-        $("#ongkir").val(formatRupiah(ongkir));
+        $("#ongkir").val(ongkir); // <-- pastikan hanya angka!
         $("#total").html(formatCurrency(total));
         $("#total_harga").val(total);
     }

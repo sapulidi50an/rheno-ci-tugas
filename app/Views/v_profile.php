@@ -25,7 +25,13 @@ History Transaksi Pembelian <strong><?= $username ?></strong>
                     <tr>
                         <th scope="row"><?php echo $index + 1 ?></th>
                         <td><?php echo $item['id'] ?></td>
-                        <td><?php echo $item['created_at'] ?></td>
+                        <td>
+                            <?php
+                            // Pastikan $item['created_at'] dalam format Y-m-d H:i:s
+                            $waktu = strtotime($item['created_at']);
+                            echo date('d-m-Y H:i', $waktu); // Format Indonesia: 23-06-2025 14:30
+                            ?>
+                        </td>
                         <td><?php echo number_to_currency($item['total_harga'], 'IDR') ?></td>
                         <td><?php echo $item['alamat'] ?></td>
                         <td><?php echo ($item['status'] == "1") ? "Sudah Selesai" : "Belum Selesai" ?></td>

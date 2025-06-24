@@ -5,8 +5,24 @@ namespace App\Controllers;
 use CodeIgniter\HTTP\ResponseInterface;
 use CodeIgniter\RESTful\ResourceController;
 
+use App\Models\UserModel;
+use App\Models\TransaksiModel;
+use App\Models\DetailTransaksiModel;
+
 class ApiController extends ResourceController
 {
+    protected $apiKey = '45HdbCNX4242c4b481425130xFedFYOr';
+    protected $user;
+    protected $transaction;
+    protected $transaction_detail;
+
+    public function __construct()
+    {
+        $this->user = new UserModel();
+        $this->transaction = new TransaksiModel();
+        $this->transaction_detail = new DetailTransaksiModel();
+    }
+
     /**
      * Return an array of resource objects, themselves in array format.
      *
@@ -14,9 +30,33 @@ class ApiController extends ResourceController
      */
     public function index()
     {
-        //
-    }
+        $data = [ 
+            'results' => [],
+            'status' => ["code" => 401, "description" => "Unauthorized"]
+        ];
 
+        $headers = $this->request->headers(); 
+
+        array_walk($headers, function (&$value, $key) {
+            $value = $value->getValue();
+        });
+
+        if(array_key_exists("Key", $headers)){
+            if ($headers["Key"] == $this->apiKey) {
+                $penjualan = $this->transaction->findAll();
+                
+                foreach ($penjualan as &$pj) {
+                    $pj['details'] = $this->transaction_detail->where('transaksi_id', $pj['id'])->findAll();
+                }
+
+                $data['status'] = ["code" => 200, "description" => "OK"];
+                $data['results'] = $penjualan;
+
+            }
+        } 
+
+        return $this->respond($data);
+    }
     /**
      * Return the properties of a resource object.
      *

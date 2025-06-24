@@ -1,7 +1,6 @@
 <?php
-
 namespace App\Controllers;
-
+date_default_timezone_set('Asia/Jakarta');
 use App\Models\TransaksiModel;
 use App\Models\DetailTransaksiModel;
 
@@ -12,6 +11,7 @@ class TransaksiController extends BaseController
     protected $apiKey;
     protected $transaksiModel;
     protected $detailTransaksiModel;
+    protected $db;
 
     function __construct()
     {
@@ -22,7 +22,7 @@ class TransaksiController extends BaseController
         $this->apiKey = env('COST_API_KEY', 'BsXYd5ew8b00f598096a1d19pzpVoyke');
         $this->transaksiModel = new TransaksiModel();
         $this->detailTransaksiModel = new DetailTransaksiModel();
-        $this->db = \Config\Database::connect(); // Tambahkan baris ini
+         $this->db = \Config\Database::connect(); // Tambahkan barisini
     }
 
     public function index()
@@ -77,6 +77,8 @@ class TransaksiController extends BaseController
     {
         $data['items'] = $this->cart->contents();
         $data['total'] = $this->cart->total();
+        $data['ongkir'] = 0; // atau nilai default ongkir
+
         return view('v_checkout', $data);
     }
 

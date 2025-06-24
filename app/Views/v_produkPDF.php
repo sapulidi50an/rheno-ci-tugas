@@ -1,5 +1,4 @@
 <h1>Data Produk</h1>
-
 <table border="1" width="100%" cellpadding="5">
     <tr>
         <th>No</th>
