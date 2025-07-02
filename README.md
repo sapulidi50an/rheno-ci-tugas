@@ -1,121 +1,106 @@
-# Toko - CodeIgniter 4 Application
+# Toko Online CodeIgniter 4
 
-## Deskripsi
-Toko adalah aplikasi web sederhana berbasis CodeIgniter 4 untuk manajemen produk, kategori, diskon, transaksi, dan keranjang belanja. Aplikasi ini cocok digunakan sebagai starter project toko online skala kecil-menengah, dengan fitur CRUD produk, kategori, checkout, serta integrasi diskon harian.
-
----
+Proyek ini adalah platform toko online berbasis web yang dibangun menggunakan framework [CodeIgniter 4](https://codeigniter.com/). Sistem ini menyediakan fitur lengkap untuk kebutuhan toko online, mulai dari katalog produk, keranjang belanja, transaksi, hingga panel admin untuk manajemen data. Proyek ini juga sudah dilengkapi sistem autentikasi dan tampilan responsif berbasis template NiceAdmin.
 
 ## Fitur
 
-- **Manajemen Produk**
-  - Tambah, edit, hapus produk dengan form sederhana.
-  - Upload foto produk yang tersimpan di folder `img/`.
-  - Download daftar produk dalam format PDF menggunakan Dompdf.
-
-- **Manajemen Kategori**
-  - Tambah, edit, hapus kategori produk untuk pengelompokan produk.
-
-- **Manajemen Diskon**
-  - Diskon harian otomatis berdasarkan tanggal pada tabel `diskon`.
-  - Diskon diterapkan langsung pada transaksi di keranjang.
-
+- **Katalog Produk**
+  - Menampilkan daftar produk beserta gambar, harga, dan deskripsi.
+  - Fitur pencarian produk berdasarkan nama atau kategori.
 - **Keranjang Belanja**
-  - Tambah produk ke keranjang.
-  - Edit dan hapus item keranjang.
-  - Kosongkan seluruh keranjang dengan satu klik.
-
-- **Transaksi & Checkout**
-  - Proses pembelian produk dari keranjang.
-  - Checkout dengan perhitungan diskon otomatis.
-  - Riwayat transaksi tersimpan di database.
-
-- **Autentikasi**
-  - Login dan logout user.
-  - Proteksi halaman dengan filter autentikasi.
-
-- **Lainnya**
-  - Halaman profil dan kontak (opsional).
-  - Integrasi API ongkir (jika diaktifkan).
-  - Tampilan responsif dengan template admin.
-
----
+  - Pengguna dapat menambah, mengurangi, atau menghapus produk dari keranjang.
+  - Update jumlah produk secara dinamis.
+- **Transaksi**
+  - Proses checkout dengan pengisian data pembeli dan alamat.
+  - Riwayat transaksi untuk pengguna.
+- **Panel Admin**
+  - CRUD produk: tambah, edit, hapus, dan lihat detail produk.
+  - Manajemen kategori produk.
+  - Laporan transaksi dan export data ke PDF.
+  - Manajemen diskon harian.
+- **Sistem Autentikasi**
+  - Login dan register pengguna.
+  - Manajemen akun dan hak akses (admin/user).
+- **Notifikasi**
+  - Notifikasi sukses/error pada setiap aksi penting (login, transaksi, CRUD).
+- **UI Responsif**
+  - Menggunakan template NiceAdmin untuk tampilan modern dan mobile-friendly.
 
 ## Instalasi
 
 1. **Clone repository**
+   ```bash
+   git clone [URL repository]
+   cd radit-ci
    ```
-   git clone <url-repo-anda>
-   cd rheno_ci_tugas
-   ```
-
-2. **Install dependency dengan Composer**
-   ```
+2. **Install dependensi**
+   ```bash
    composer install
    ```
-
-3. **Copy file environment dan konfigurasi**
+3. **Konfigurasi database**
+   - Jalankan XAMPP, aktifkan Apache & MySQL.
+   - Buat database, misal: `db_ci4` di phpMyAdmin.
+   - Salin file `.env.example` menjadi `.env` lalu sesuaikan konfigurasi database:
+     ```
+     database.default.hostname = localhost
+     database.default.database = db_ci4_reno
+     database.default.username = root
+     database.default.password =
+     database.default.DBDriver = MySQLi
+     ```
+4. **Migrasi dan seeder database**
+   ```bash
+   php spark migrate
+   php spark db:seed ProductSeeder
+   php spark db:seed ProductCategorySeeder
+   php spark db:seed UserSeeder
    ```
-   cp env .env
-   ```
-   Edit file `.env` dan sesuaikan bagian berikut:
-   ```
-   CI_ENVIRONMENT = development
-   app.baseURL = 'http://localhost:8080/'
-   database.default.hostname = localhost
-   database.default.database = nama_database
-   database.default.username = root
-   database.default.password =
-   database.default.DBDriver = MySQLi
-   ```
-
-4. **Buat database dan import struktur**
-   - Buat database di MySQL, misal: `toko_ci`
-   - Import file SQL jika tersedia, atau buat tabel berikut minimal:
-     - `produk` (id, nama, harga, jumlah, foto, created_at, updated_at)
-     - `kategori` (id, nama)
-     - `diskon` (id, nominal, tanggal)
-     - `transaksi`, `transaksi_detail` (untuk riwayat transaksi)
-   - Pastikan tabel `diskon` memiliki kolom `tanggal` bertipe DATE.
-
 5. **Jalankan server**
-   ```
+   ```bash
    php spark serve
    ```
-   atau gunakan XAMPP dan akses via browser ke `http://localhost:8080`
-
-6. **(Opsional) Install Dompdf**
-   ```
-   composer require dompdf/dompdf
-   ```
-
----
+6. **Akses aplikasi**
+   - Buka browser dan akses [http://localhost:8080](http://localhost:8080)
 
 ## Struktur Proyek
 
+Struktur utama proyek mengikuti pola MVC CodeIgniter 4:
+
 ```
-rheno_ci_tugas/
-│
-├── app/
-│   ├── Config/           # Konfigurasi aplikasi & routes
-│   ├── Controllers/      # Semua controller (ProdukController, TransaksiController, AuthController, dsb)
-│   ├── Models/           # Semua model (ProductModel, TransactionModel, DiskonModel, dsb)
-│   ├── Views/            # Semua view (v_login, v_produk, v_keranjang, v_produkPDF, dsb)
-│   └── Filters/          # Filter autentikasi
-│
-├── public/               # Root web server (index.php, asset statis, gambar produk)
-├── writable/             # Folder untuk logs, cache, uploads
-├── vendor/               # Dependency composer (otomatis)
-├── .env                  # Konfigurasi environment (baseURL, database, dsb)
-├── composer.json         # Daftar dependency PHP
-└── README.md             # Dokumentasi proyek
+app/
+  Controllers/
+    AuthController.php            # Login, register, logout, session
+    DiskonController.php          # Manajemen diskon harian
+    ProductCategoryController.php # CRUD kategori produk
+    ProdukController.php          # CRUD produk
+    TransaksiController.php       # Proses transaksi & riwayat
+    ContactController.php         # Form kontak
+    Home.php                      # Halaman utama
+  Models/
+    UserModel.php                 # Model user
+    ProductModel.php              # Model produk
+    ProductCategoryModel.php      # Model kategori produk
+    DiskonModel.php               # Model diskon
+    TransactionModel.php          # Model transaksi
+    TransactionDetailModel.php    # Model detail transaksi
+  Views/
+    layout.php                    # Layout utama
+    v_login.php                   # Halaman login
+    v_produk.php                  # Daftar produk
+    v_kategori.php                # Daftar kategori
+    v_keranjang.php               # Keranjang belanja
+    v_checkout.php                # Checkout
+    v_diskon.php                  # Manajemen diskon
+    v_contact.php                 # Kontak
+    v_home.php                    # Beranda
+    v_profile.php                 # Profil user
+public/
+  img/                            # Gambar produk
+  NiceAdmin/                      # Template admin
+.env                              # Konfigurasi environment
+composer.json                     # Dependensi PHP
 ```
 
----
-
-## Catatan
-
-- Pastikan PHP 8.1+ dan ekstensi yang dibutuhkan sudah aktif.
-- Untuk keamanan, arahkan root web server ke folder `public/`.
-- Jika ada error "Whoops!", cek log di `writable/logs` dan pastikan `.env` sudah benar.
-- Untuk fitur diskon, pastikan kolom `tanggal` ada di tabel `diskon`.
-- Jika ingin menambah fitur, sesuaikan struktur tabel dan controller
+> **Catatan:**  
+> - Pastikan semua migrasi dan seeder dijalankan agar database terisi data awal.
+> - Untuk login admin, gunakan user yang sudah di-seed atau buat user baru lewat phpMyAdmin.
