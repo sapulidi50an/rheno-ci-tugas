@@ -6,7 +6,6 @@ use CodeIgniter\RESTful\ResourceController;
 use App\Models\TransactionModel;
 use App\Models\TransactionDetailModel;
 use App\Models\DiskonModel;
-use GuzzleHttp\Client;
 
 class TransaksiController extends ResourceController
 {

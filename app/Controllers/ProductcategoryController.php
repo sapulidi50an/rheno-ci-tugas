@@ -3,129 +3,53 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
-use App\Models\ProductCategoryModel; // Assumes you have this model
+use App\Models\ProductCategoryModel;
 
 class ProductCategoryController extends BaseController
 {
-    protected $categoryModel;
+     protected $kategori; 
 
-    public function __construct()
+    function __construct()
     {
-        $this->categoryModel = new ProductCategoryModel();
+        $this->kategori = new ProductCategoryModel();
     }
 
-    // Show list of categories
     public function index()
-    
     {
-        $data['category'] = $this->categoryModel->findAll();
-        return view('v_ProductCategory', $data);
-    }
+        $kategori = $this->kategori->findAll();
+        $data['kategori'] = $kategori;
 
-    // Handle creating a new category
+        return view('v_kategori', $data);
+    }
     public function create()
     {
-        helper(['form']);
+        $dataForm = [
+            'name' => $this->request->getPost('name'),
+            'description' => $this->request->getPost('description'),
+            'created_at' => date("Y-m-d H:i:s")
+        ];
 
-        $validation = $this->validate([
-            'nama_kategori' => 'required|string|max_length[255]',
-            'deskripsi'     => 'required|string|max_length[1000]',
-            'foto'          => 'permit_empty|is_image[foto]|max_size[foto,2048]'
-        ]);
+        $this->kategori->insert($dataForm);
 
-        if (!$validation) {
-            return redirect()->to('/produk_category')->with('failed', $this->validator->listErrors());
-        }
-
-        $fileName = null;
-        $fotoFile = $this->request->getFile('foto');
-        if ($fotoFile && $fotoFile->isValid() && !$fotoFile->hasMoved()) {
-            $fileName = $fotoFile->getRandomName();
-            $fotoFile->move('img', $fileName); // upload
-        }
-
-        $this->categoryModel->insert([
-            'nama_kategori' => $this->request->getPost('nama_kategori'),
-            'deskripsi'     => $this->request->getPost('deskripsi'),
-            'foto'          => $fileName
-        ]);
-
-        session()->setFlashdata('success', 'Kategori berhasil ditambahkan.');
-        return redirect()->to('/produk_category');
-    }
-
-    // Show edit form is in the modal, so here just handle the submission
+        return redirect('kategori')->with('success', 'Data Berhasil Ditambah');
+    } 
     public function edit($id)
     {
-        helper(['form']);
+        $dataKategori = $this->kategori->find($id);
 
-        // Validate post input (foto optional on edit)
-        $rules = [
-            'nama_kategori' => 'required|string|max_length[255]',
-            'deskripsi'     => 'required|string|max_length[1000]',
+        $dataForm = [
+            'name' => $this->request->getPost('name'),
+            'description' => $this->request->getPost('description'),
+            'updated_at' => date("Y-m-d H:i:s")
         ];
 
-        // Check if user checked to replace photo
-        if ($this->request->getPost('check') == '1') {
-            $rules['foto'] = 'uploaded[foto]|max_size[foto,2048]|is_image[foto]';
-        }
-
-        if (!$this->validate($rules)) {
-            return redirect()->to('/produk_category')->with('failed', $this->validator->listErrors());
-        }
-
-        $dataToUpdate = [
-            'nama_kategori' => $this->request->getPost('nama_kategori'),
-            'deskripsi'     => $this->request->getPost('deskripsi'),
-        ];
-
-        // Handle photo replacement
-        if ($this->request->getPost('check') == '1') {
-            $fotoFile = $this->request->getFile('foto');
-            if ($fotoFile && $fotoFile->isValid() && !$fotoFile->hasMoved()) {
-                // Delete old photo if exists
-                $oldData = $this->categoryModel->find($id);
-                if ($oldData && isset($oldData['foto']) && !empty($oldData['foto'])) {
-                    $oldFilePath = FCPATH . 'img/' . $oldData['foto']; // hapus
-                    if (file_exists($oldFilePath)) {
-                        unlink($oldFilePath);
-                    }
-                }
-                $fileName = $fotoFile->getRandomName();
-                $fotoFile->move('img', $fileName);
-                $dataToUpdate['foto'] = $fileName;  
-            }
-        }
-
-        if (empty($dataToUpdate)) {
-            session()->setFlashdata('failed', 'Tidak ada data yang diubah.');
-            return redirect()->to('/produk_category');
-        }
-        $this->categoryModel->update($id, $dataToUpdate);
-
-        session()->setFlashdata('success', 'Kategori berhasil diubah.');
-        return redirect()->to('/produk_category');
+        $this->kategori->update($id, $dataForm);
+        return redirect('kategori')->with('success', 'Data Berhasil Diubah');
     }
 
-    // Handle deleting a category
     public function delete($id)
     {
-        // Find the record to delete photo if exists
-        $category = $this->categoryModel->find($id);
-        if ($category) {
-            if (isset($category['foto']) && !empty($category['foto'])) {
-                $filePath = FCPATH . 'img/' . $category['foto'];
-                if (file_exists($filePath)) {
-                    unlink($filePath);
-                }
-            }
-            $this->categoryModel->delete($id);
-            session()->setFlashdata('success', 'Kategori berhasil dihapus.');
-        } else {
-            session()->setFlashdata('failed', 'Kategori tidak ditemukan.');
-        }
-
-        return redirect()->to('/produk_category');
+        $this->kategori->delete($id);
+        return redirect('kategori')->with('success', 'Data Berhasil Dihapus');
     }
 }
-

@@ -14,7 +14,7 @@
 # ENVIRONMENT
 #--------------------------------------------------------------------
 
-# CI_ENVIRONMENT = development
+ CI_ENVIRONMENT = development
 
 #--------------------------------------------------------------------
 # APP
@@ -29,12 +29,12 @@
 #--------------------------------------------------------------------
 # DATABASE
 #--------------------------------------------------------------------
-
-#database.default.hostname = localhost
- database.default.database = ci4_ficky
+app.baseURL = 'http://localhost:8080/'
+database.default.hostname = localhost
+ database.default.database = db_ci4_ficky
  database.default.username = root
-database.default.password = root
-database.default.DBDriver = MySQLi
+ database.default.password = 
+ database.default.DBDriver = MySQLi
  database.default.DBPrefix =
  database.default.port = 3306
 

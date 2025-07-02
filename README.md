@@ -1,68 +1,121 @@
-# CodeIgniter 4 Application Starter
+# Toko - CodeIgniter 4 Application
 
-## What is CodeIgniter?
+## Deskripsi
+Toko adalah aplikasi web sederhana berbasis CodeIgniter 4 untuk manajemen produk, kategori, diskon, transaksi, dan keranjang belanja. Aplikasi ini cocok digunakan sebagai starter project toko online skala kecil-menengah, dengan fitur CRUD produk, kategori, checkout, serta integrasi diskon harian.
 
-CodeIgniter is a PHP full-stack web framework that is light, fast, flexible and secure.
-More information can be found at the [official site](https://codeigniter.com).
+---
 
-This repository holds a composer-installable app starter.
-It has been built from the
-[development repository](https://github.com/codeigniter4/CodeIgniter4).
+## Fitur
 
-More information about the plans for version 4 can be found in [CodeIgniter 4](https://forum.codeigniter.com/forumdisplay.php?fid=28) on the forums.
+- **Manajemen Produk**
+  - Tambah, edit, hapus produk dengan form sederhana.
+  - Upload foto produk yang tersimpan di folder `img/`.
+  - Download daftar produk dalam format PDF menggunakan Dompdf.
 
-You can read the [user guide](https://codeigniter.com/user_guide/)
-corresponding to the latest version of the framework.
+- **Manajemen Kategori**
+  - Tambah, edit, hapus kategori produk untuk pengelompokan produk.
 
-## Installation & updates
+- **Manajemen Diskon**
+  - Diskon harian otomatis berdasarkan tanggal pada tabel `diskon`.
+  - Diskon diterapkan langsung pada transaksi di keranjang.
 
-`composer create-project codeigniter4/appstarter` then `composer update` whenever
-there is a new release of the framework.
+- **Keranjang Belanja**
+  - Tambah produk ke keranjang.
+  - Edit dan hapus item keranjang.
+  - Kosongkan seluruh keranjang dengan satu klik.
 
-When updating, check the release notes to see if there are any changes you might need to apply
-to your `app` folder. The affected files can be copied or merged from
-`vendor/codeigniter4/framework/app`.
+- **Transaksi & Checkout**
+  - Proses pembelian produk dari keranjang.
+  - Checkout dengan perhitungan diskon otomatis.
+  - Riwayat transaksi tersimpan di database.
 
-## Setup
+- **Autentikasi**
+  - Login dan logout user.
+  - Proteksi halaman dengan filter autentikasi.
 
-Copy `env` to `.env` and tailor for your app, specifically the baseURL
-and any database settings.
+- **Lainnya**
+  - Halaman profil dan kontak (opsional).
+  - Integrasi API ongkir (jika diaktifkan).
+  - Tampilan responsif dengan template admin.
 
-## Important Change with index.php
+---
 
-`index.php` is no longer in the root of the project! It has been moved inside the *public* folder,
-for better security and separation of components.
+## Instalasi
 
-This means that you should configure your web server to "point" to your project's *public* folder, and
-not to the project root. A better practice would be to configure a virtual host to point there. A poor practice would be to point your web server to the project root and expect to enter *public/...*, as the rest of your logic and the
-framework are exposed.
+1. **Clone repository**
+   ```
+   git clone <url-repo-anda>
+   cd rheno_ci_tugas
+   ```
 
-**Please** read the user guide for a better explanation of how CI4 works!
+2. **Install dependency dengan Composer**
+   ```
+   composer install
+   ```
 
-## Repository Management
+3. **Copy file environment dan konfigurasi**
+   ```
+   cp env .env
+   ```
+   Edit file `.env` dan sesuaikan bagian berikut:
+   ```
+   CI_ENVIRONMENT = development
+   app.baseURL = 'http://localhost:8080/'
+   database.default.hostname = localhost
+   database.default.database = nama_database
+   database.default.username = root
+   database.default.password =
+   database.default.DBDriver = MySQLi
+   ```
 
-We use GitHub issues, in our main repository, to track **BUGS** and to track approved **DEVELOPMENT** work packages.
-We use our [forum](http://forum.codeigniter.com) to provide SUPPORT and to discuss
-FEATURE REQUESTS.
+4. **Buat database dan import struktur**
+   - Buat database di MySQL, misal: `toko_ci`
+   - Import file SQL jika tersedia, atau buat tabel berikut minimal:
+     - `produk` (id, nama, harga, jumlah, foto, created_at, updated_at)
+     - `kategori` (id, nama)
+     - `diskon` (id, nominal, tanggal)
+     - `transaksi`, `transaksi_detail` (untuk riwayat transaksi)
+   - Pastikan tabel `diskon` memiliki kolom `tanggal` bertipe DATE.
 
-This repository is a "distribution" one, built by our release preparation script.
-Problems with it can be raised on our forum, or as issues in the main repository.
+5. **Jalankan server**
+   ```
+   php spark serve
+   ```
+   atau gunakan XAMPP dan akses via browser ke `http://localhost:8080`
 
-## Server Requirements
+6. **(Opsional) Install Dompdf**
+   ```
+   composer require dompdf/dompdf
+   ```
 
-PHP version 8.1 or higher is required, with the following extensions installed:
+---
 
-- [intl](http://php.net/manual/en/intl.requirements.php)
-- [mbstring](http://php.net/manual/en/mbstring.installation.php)
+## Struktur Proyek
 
-> [!WARNING]
-> - The end of life date for PHP 7.4 was November 28, 2022.
-> - The end of life date for PHP 8.0 was November 26, 2023.
-> - If you are still using PHP 7.4 or 8.0, you should upgrade immediately.
-> - The end of life date for PHP 8.1 will be December 31, 2025.
+```
+rheno_ci_tugas/
+│
+├── app/
+│   ├── Config/           # Konfigurasi aplikasi & routes
+│   ├── Controllers/      # Semua controller (ProdukController, TransaksiController, AuthController, dsb)
+│   ├── Models/           # Semua model (ProductModel, TransactionModel, DiskonModel, dsb)
+│   ├── Views/            # Semua view (v_login, v_produk, v_keranjang, v_produkPDF, dsb)
+│   └── Filters/          # Filter autentikasi
+│
+├── public/               # Root web server (index.php, asset statis, gambar produk)
+├── writable/             # Folder untuk logs, cache, uploads
+├── vendor/               # Dependency composer (otomatis)
+├── .env                  # Konfigurasi environment (baseURL, database, dsb)
+├── composer.json         # Daftar dependency PHP
+└── README.md             # Dokumentasi proyek
+```
 
-Additionally, make sure that the following extensions are enabled in your PHP:
+---
 
-- json (enabled by default - don't turn it off)
-- [mysqlnd](http://php.net/manual/en/mysqlnd.install.php) if you plan to use MySQL
-- [libcurl](http://php.net/manual/en/curl.requirements.php) if you plan to use the HTTP\CURLRequest library
+## Catatan
+
+- Pastikan PHP 8.1+ dan ekstensi yang dibutuhkan sudah aktif.
+- Untuk keamanan, arahkan root web server ke folder `public/`.
+- Jika ada error "Whoops!", cek log di `writable/logs` dan pastikan `.env` sudah benar.
+- Untuk fitur diskon, pastikan kolom `tanggal` ada di tabel `diskon`.
+- Jika ingin menambah fitur, sesuaikan struktur tabel dan controller
