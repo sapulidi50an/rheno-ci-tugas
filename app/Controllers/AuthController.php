@@ -29,14 +29,7 @@ class AuthController extends BaseController
                 $username = $this->request->getVar('username');
                 $password = $this->request->getVar('password');
 
-                $dataUser = $this->user->where(['username' => $username])->first(); //pasw 1234567
-                // Example: Only one user for demonstration
-                   $dataUser = [
-                    'username' => 'Rhenonabil',
-                    'password' => '$2y$10$h4uMZkjoXuKNiOYQco5B3essl.y3rSPd4gMRBpEJTawH6HSZnbRPO', // hasil password_hash('a1115368', PASSWORD_DEFAULT)
-                    'role' => 'admin'
-                   ];
-
+                $dataUser = $this->user->where(['username' => $username])->first();
 
                 if ($dataUser) {
                     if (password_verify($password, $dataUser['password'])) {

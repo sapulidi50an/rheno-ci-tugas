@@ -23,23 +23,39 @@ class DiskonController extends BaseController
         if (session()->get('role') !== 'admin') {
             return redirect()->to('/')->with('error', 'Akses hanya untuk admin');
         }
-        $validation = $this->validate([
+
+        $model = new DiskonModel();
+        $tanggal = $this->request->getPost('tanggal');
+        $nominal = $this->request->getPost('nominal');
+
+        // Cek apakah sudah ada diskon di tanggal yang sama
+        $sudahAda = $model->where('tanggal', $tanggal)->countAllResults();
+
+        $rules = [
             'tanggal' => [
-                'rules' => 'required|is_unique[diskon.tanggal]',
+                'rules' => 'required',
                 'errors' => [
-                    'required' => 'Tanggal harus diisi.',
-                    'is_unique' => 'Tanggal diskon sudah ada.'
+                    'required' => 'Tanggal harus diisi.'
                 ]
             ],
             'nominal' => 'required|numeric'
-        ]);
+        ];
+
+        // Jika sudah ada diskon di tanggal itu, tambahkan validasi is_unique
+        if ($sudahAda > 0) {
+            $rules['tanggal']['rules'] .= '|is_unique[diskon.tanggal]';
+            $rules['tanggal']['errors']['is_unique'] = 'Tanggal diskon sudah ada.';
+        }
+
+        $validation = $this->validate($rules);
+
         if (!$validation) {
             return redirect()->back()->withInput()->with('validation', $this->validator);
         }
-        $model = new DiskonModel();
+
         $model->save([
-            'tanggal' => $this->request->getPost('tanggal'),
-            'nominal' => $this->request->getPost('nominal'),
+            'tanggal' => $tanggal,
+            'nominal' => $nominal,
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => null
         ]);
@@ -63,6 +79,13 @@ class DiskonController extends BaseController
             return redirect()->to('/')->with('error', 'Akses hanya untuk admin');
         }
         $validation = $this->validate([
+            'tanggal' => [
+                'rules' => "required|is_unique[diskon.tanggal,id,{$id}]",
+                'errors' => [
+                    'required' => 'Tanggal harus diisi.',
+                    'is_unique' => 'Tanggal diskon sudah ada.'
+                ]
+            ],
             'nominal' => 'required|numeric'
         ]);
         if (!$validation) {

@@ -4,8 +4,8 @@
     <div class="d-flex align-items-center justify-content-between w-100">
       <div class="d-flex align-items-center">
         <img src="<?= base_url() ?>NiceAdmin/assets/img/logo.png" alt="" style="height:40px; margin-right:10px;">
-        <span class="d-none d-lg-block" style="font-weight:bold; margin-right:20px;">Toko</span>
-        <a href="http://localhost/dashboard-toko/" class="btn btn-primary btn-sm">Dashboard TOKO</a>
+        <span class="d-none d-lg-block" style="font-weight:bold; margin-right:20px;">TOKO BAKUL NOOOOO</span>
+        <a href="http://localhost/dashboard-toko/" class="btn btn-primary btn-sm">Dashboard </a>
       </div>
       <i class="bi bi-list toggle-sidebar-btn"></i>
       <div class="search-bar flex-grow-1 mx-3">
@@ -180,7 +180,7 @@
 
           <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
             <li class="dropdown-header">
-              <h6>Radit</h6>
+              <h6>Nabil Rhenonabil</h6>
               <span>Web Designer</span>
             </li>
             <li>
