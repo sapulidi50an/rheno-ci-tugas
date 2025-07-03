@@ -31,7 +31,7 @@ Proyek ini adalah platform toko online berbasis web yang dibangun menggunakan fr
 1. **Clone repository**
    ```bash
    git clone [URL repository]
-   cd radit-ci
+   cd rheno-ci_tugas
    ```
 2. **Install dependensi**
    ```bash
